@@ -115,7 +115,7 @@ export default function HomePage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-gray-900 px-4 py-3 text-sm font-medium text-white transition hover:bg-gray-700 disabled:opacity-50"
+          className="w-full rounded-lg bg-blue-700 px-4 py-3 text-sm font-medium text-white transition hover:bg-blue-600 disabled:opacity-50"
         >
           {loading ? "Analizando..." : "Analizar proveedor"}
         </button>

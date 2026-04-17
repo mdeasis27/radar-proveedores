@@ -47,7 +47,7 @@ export async function generateReport(
   const sources = allResults.map((r) => ({ title: r.title, url: r.url }));
 
   const { object } = await generateObject({
-    model: openrouter("meta-llama/llama-3.1-8b-instruct:free"),
+    model: openrouter("openai/gpt-oss-20b:free"),
     schema: reportSchema,
     prompt: `Eres un analista de riesgo corporativo senior con experiencia en due diligence de proveedores en América Latina.
 
