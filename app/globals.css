@@ -64,6 +64,17 @@
     line-height: 1.25;
     font-weight: 600;
   }
+  h4 {
+    letter-spacing: -0.96px;
+    line-height: 1.33;
+    font-weight: 600;
+  }
+  h5,
+  h6 {
+    letter-spacing: -0.32px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
