@@ -74,10 +74,10 @@ export default function HomePage() {
     <main className="mx-auto max-w-2xl px-6 py-16">
       {/* Header */}
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-semibold text-foreground">
           Radar de Proveedores
         </h1>
-        <p className="mt-2 text-gray-500">
+        <p className="mt-2 text-muted-foreground">
           Due diligence en segundos. Ingresa el nombre de un proveedor para
           analizar su riesgo reputacional y legal.
         </p>
@@ -86,7 +86,7 @@ export default function HomePage() {
       {/* Formulario */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label className="mb-1 block text-sm font-medium text-foreground">
             Nombre de la empresa *
           </label>
           <input
@@ -94,13 +94,13 @@ export default function HomePage() {
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             placeholder="Ej: Acme Logistics S.A."
-            className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            className="w-full rounded-[var(--radius-md)] shadow-[var(--shadow-border-light)] px-4 py-2.5 text-sm outline-none focus:shadow-[var(--shadow-border)] focus:ring-2 focus:ring-[var(--ring)]/20 bg-background text-foreground"
             required
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label className="mb-1 block text-sm font-medium text-foreground">
             País (opcional)
           </label>
           <input
@@ -108,14 +108,14 @@ export default function HomePage() {
             value={country}
             onChange={(e) => setCountry(e.target.value)}
             placeholder="Ej: Colombia"
-            className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500"
+            className="w-full rounded-[var(--radius-md)] shadow-[var(--shadow-border-light)] px-4 py-2.5 text-sm outline-none focus:shadow-[var(--shadow-border)] bg-background text-foreground"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-blue-700 px-4 py-3 text-sm font-medium text-white transition hover:bg-blue-600 disabled:opacity-50"
+          className="w-full rounded-[var(--radius-md)] bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-50"
         >
           {loading ? "Analizando..." : "Analizar proveedor"}
         </button>
@@ -124,15 +124,15 @@ export default function HomePage() {
       {/* Estado loading */}
       {loading && (
         <div className="mt-10 space-y-4">
-          <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
-          <div className="h-28 animate-pulse rounded-xl bg-gray-100" />
-          <div className="h-24 animate-pulse rounded-xl bg-gray-100" />
+          <div className="h-20 animate-pulse rounded-[var(--radius-md)] bg-muted/20" />
+          <div className="h-28 animate-pulse rounded-[var(--radius-md)] bg-muted/20" />
+          <div className="h-24 animate-pulse rounded-[var(--radius-md)] bg-muted/20" />
         </div>
       )}
 
       {/* Estado error */}
       {error && !loading && (
-        <div className="mt-10 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+        <div className="mt-10 rounded-[var(--radius-md)] border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
           <strong>Error:</strong> {error}
         </div>
       )}
@@ -140,11 +140,11 @@ export default function HomePage() {
       {/* Resultados */}
       {result && !loading && (
         <div className="mt-10 space-y-5">
-          <div className="border-b border-gray-100 pb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+          <div className="border-b border-border pb-4">
+            <h2 className="text-lg font-semibold text-foreground">
               {result.company}
               {result.country && (
-                <span className="ml-2 text-sm font-normal text-gray-400">
+                <span className="ml-2 text-sm font-normal text-muted-foreground">
                   — {result.country}
                 </span>
               )}
@@ -158,11 +158,11 @@ export default function HomePage() {
           />
 
           {/* Resumen ejecutivo */}
-          <div className="rounded-xl border border-gray-100 bg-white px-5 py-4">
-            <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <div className="rounded-[var(--radius-md)] shadow-[var(--shadow-card)] bg-card px-5 py-4">
+            <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               Resumen ejecutivo
             </h3>
-            <p className="text-sm leading-relaxed text-gray-700">
+            <p className="text-sm leading-relaxed text-foreground">
               {result.report.executive_summary}
             </p>
           </div>
@@ -186,8 +186,8 @@ export default function HomePage() {
 
           {/* Fuentes */}
           {result.report.sources.length > 0 && (
-            <div className="rounded-xl border border-gray-100 bg-white px-5 py-4">
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+            <div className="rounded-[var(--radius-md)] shadow-[var(--shadow-card)] bg-card px-5 py-4">
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Fuentes consultadas
               </h3>
               <ul className="space-y-1.5">
@@ -197,7 +197,7 @@ export default function HomePage() {
                       href={s.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-[var(--accent)] hover:underline"
                     >
                       {s.title || s.url}
                     </a>

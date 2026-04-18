@@ -42,10 +42,10 @@ const MOCK_HISTORY: HistoryEntry[] = [
 export default function HistoryPage() {
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <h1 className="text-3xl font-bold text-gray-900">
+      <h1 className="text-3xl font-semibold text-foreground">
         Historial de análisis
       </h1>
-      <p className="mt-2 text-gray-500">
+      <p className="mt-2 text-muted-foreground">
         Últimas búsquedas de due diligence realizadas.
       </p>
 
@@ -53,12 +53,12 @@ export default function HistoryPage() {
         {MOCK_HISTORY.map((entry, i) => (
           <li
             key={i}
-            className="rounded-xl border border-gray-100 bg-white px-5 py-4"
+            className="rounded-[var(--radius-md)] shadow-[var(--shadow-card)] bg-card px-5 py-4"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="font-semibold text-gray-900">{entry.company}</p>
-                <p className="text-sm text-gray-400">
+                <p className="font-semibold text-foreground">{entry.company}</p>
+                <p className="text-sm text-muted-foreground">
                   {entry.country} · {entry.analyzed_at}
                 </p>
               </div>
@@ -68,10 +68,10 @@ export default function HistoryPage() {
                 {entry.risk_score}/100
               </span>
             </div>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-foreground">
               {RISK_LABELS[entry.risk_level]}
             </p>
-            <p className="mt-1 text-xs text-gray-400">
+            <p className="mt-1 text-xs text-muted-foreground">
               Recomendación: {entry.recommendation}
             </p>
           </li>
