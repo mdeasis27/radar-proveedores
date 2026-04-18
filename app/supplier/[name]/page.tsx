@@ -8,8 +8,10 @@ export default function SupplierPage({
 }) {
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
-      <h1 className="text-2xl font-bold">{decodeURIComponent(params.name)}</h1>
-      <p className="mt-2 text-gray-500">Cargando informe…</p>
+      <h1 className="text-2xl font-semibold text-foreground">
+        {decodeURIComponent(params.name)}
+      </h1>
+      <p className="mt-2 text-muted-foreground">Cargando informe…</p>
       {/* TODO: mostrar RiskMeter, AlertCard (critical), AlertCard (positive), fuentes */}
     </main>
   );
