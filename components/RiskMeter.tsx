@@ -1,4 +1,6 @@
-import { RISK_COLORS, RISK_LABELS, type RiskLevel } from "@/lib/risk-classifier";
+import { Alert } from "@/design-system/components/alert";
+import { Meter } from "@/design-system/components/meter";
+import { RISK_LABELS, RISK_TONES, type RiskLevel } from "@/lib/risk-classifier";
 
 interface RiskMeterProps {
   level: RiskLevel;
@@ -6,15 +8,17 @@ interface RiskMeterProps {
 }
 
 export function RiskMeter({ level, score }: RiskMeterProps) {
+  const tone = RISK_TONES[level];
+
   return (
-    <div className={`rounded-xl border px-6 py-4 ${RISK_COLORS[level]}`}>
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium uppercase tracking-wide">
-          Nivel de riesgo
+    <Alert tone={tone} title="Nivel de riesgo">
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-sm text-foreground">{RISK_LABELS[level]}</p>
+        <span className="text-2xl font-semibold tracking-tight text-foreground">
+          {score}/100
         </span>
-        <span className="text-2xl font-bold">{score}/100</span>
       </div>
-      <p className="mt-1 text-sm">{RISK_LABELS[level]}</p>
-    </div>
+      <Meter value={score} tone={tone} className="mt-3" />
+    </Alert>
   );
 }

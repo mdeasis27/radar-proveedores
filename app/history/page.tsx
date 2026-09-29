@@ -1,7 +1,8 @@
 // Historial de búsquedas — datos mock estáticos (sin DB)
 
+import { StatusBadge } from "@/design-system/components/status-badge";
 import type { RiskLevel } from "@/lib/risk-classifier";
-import { RISK_LABELS, RISK_COLORS } from "@/lib/risk-classifier";
+import { RISK_LABELS, RISK_TONES } from "@/lib/risk-classifier";
 
 interface HistoryEntry {
   company: string;
@@ -62,11 +63,13 @@ export default function HistoryPage() {
                   {entry.country} · {entry.analyzed_at}
                 </p>
               </div>
-              <span
-                className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${RISK_COLORS[entry.risk_level]}`}
+              <StatusBadge
+                tone={RISK_TONES[entry.risk_level]}
+                dot
+                className="shrink-0 px-3 py-1"
               >
                 {entry.risk_score}/100
-              </span>
+              </StatusBadge>
             </div>
             <p className="mt-2 text-sm text-foreground">
               {RISK_LABELS[entry.risk_level]}
