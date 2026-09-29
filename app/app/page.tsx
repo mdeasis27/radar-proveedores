@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { RiskMeter } from "@/components/RiskMeter";
 import { AlertCard } from "@/components/AlertCard";
+import { Alert } from "@/design-system/components/alert";
+import { StatusBadge } from "@/design-system/components/status-badge";
+import type { Tone } from "@/design-system/components/tone";
 import type { SupplierReport } from "@/lib/report-generator";
 
 interface AnalyzeResponse {
@@ -14,20 +17,11 @@ interface AnalyzeResponse {
 
 const RECOMMENDATION_STYLES: Record<
   SupplierReport["recommendation"],
-  { label: string; classes: string }
+  { label: string; tone: Tone }
 > = {
-  aprobar: {
-    label: "Recomendación: Aprobar",
-    classes: "bg-green-100 text-green-800 border border-green-200",
-  },
-  investigar_mas: {
-    label: "Recomendación: Investigar más",
-    classes: "bg-yellow-100 text-yellow-800 border border-yellow-200",
-  },
-  rechazar: {
-    label: "Recomendación: Rechazar",
-    classes: "bg-red-100 text-red-800 border border-red-200",
-  },
+  aprobar: { label: "Recomendación: Aprobar", tone: "success" },
+  investigar_mas: { label: "Recomendación: Investigar más", tone: "warning" },
+  rechazar: { label: "Recomendación: Rechazar", tone: "danger" },
 };
 
 export default function HomePage() {
@@ -132,9 +126,9 @@ export default function HomePage() {
 
       {/* Estado error */}
       {error && !loading && (
-        <div className="mt-10 rounded-[var(--radius-md)] border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+        <Alert tone="danger" className="mt-10">
           <strong>Error:</strong> {error}
-        </div>
+        </Alert>
       )}
 
       {/* Resultados */}
@@ -170,11 +164,9 @@ export default function HomePage() {
           {/* Recomendación */}
           {rec && (
             <div className="flex">
-              <span
-                className={`rounded-full px-4 py-1.5 text-sm font-semibold ${rec.classes}`}
-              >
+              <StatusBadge tone={rec.tone} className="px-4 py-1.5 text-sm font-semibold">
                 {rec.label}
-              </span>
+              </StatusBadge>
             </div>
           )}
 
