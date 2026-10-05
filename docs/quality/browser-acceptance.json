@@ -1,0 +1,50 @@
+{
+  "repository": "radar-proveedores",
+  "checks": [
+    {
+      "locale": "en",
+      "htmlLang": "en",
+      "buttons": [
+        "Assess scenario",
+        "Cancel",
+        "Reset",
+        "Play",
+        "Show all"
+      ],
+      "inputs": 3,
+      "clicked": "Assess scenario",
+      "traceEvents": 2,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    },
+    {
+      "locale": "es",
+      "htmlLang": "es",
+      "buttons": [
+        "Evaluar escenario",
+        "Cancelar",
+        "Restablecer",
+        "Reproducir",
+        "Ver todo"
+      ],
+      "inputs": 3,
+      "clicked": "Evaluar escenario",
+      "traceEvents": 2,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    }
+  ],
+  "errors": [],
+  "legacyRedirectRetainsQuery": true,
+  "unsupportedLocale404": true,
+  "translatedBodyDiffers": true,
+  "reducedMotionDisablesPlayback": true,
+  "mobileNoOverflow": true,
+  "noExternalOrApiRequests": true
+}

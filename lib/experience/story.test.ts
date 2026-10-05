@@ -1,0 +1,2 @@
+import assert from "node:assert/strict"; import test from "node:test"; import { assess } from "./due-diligence"; import { isSupplierScenario, supplierScenarios } from "./story";
+test("supplier presets expose contrasting investigation routes",()=>{assert.equal(assess(supplierScenarios.resolved).recommendation,"proceed");assert.equal(assess(supplierScenarios.investigate).recommendation,"investigate");assert.equal(isSupplierScenario({...supplierScenarios.resolved,relevance:40},"resolved"),false);});
