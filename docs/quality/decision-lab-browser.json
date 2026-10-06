@@ -1,0 +1,51 @@
+{
+  "repository": "radar-proveedores",
+  "scope": "Real React component with controlled locale; Next routes not tested.",
+  "checks": [
+    {
+      "locale": "en",
+      "scenarios": [
+        {
+          "preset": "Resolved evidence\nMonitoring can continue.",
+          "outcome": "Proceed\n\nEvidence is resolved; monitoring can continue."
+        },
+        {
+          "preset": "Critical signal\nAn investigation opens.",
+          "outcome": "Investigate\n\nThe high-impact signal keeps analyst tasks open."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    },
+    {
+      "locale": "es",
+      "scenarios": [
+        {
+          "preset": "Evidencia resuelta\nSe conserva el monitoreo.",
+          "outcome": "Continuar\n\nLa evidencia está resuelta; el monitoreo puede continuar."
+        },
+        {
+          "preset": "Señal crítica\nSe abre una investigación.",
+          "outcome": "Investigar\n\nLa señal de alto impacto conserva tareas abiertas para la persona analista."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    }
+  ],
+  "errors": []
+}
