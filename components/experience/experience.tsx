@@ -1,4 +1,89 @@
 "use client";
-import {BusinessBrief} from "./business-brief";
-import { useEffect, useState } from "react"; import { ScenarioPicker, StoryStage, OutcomeBlock } from "@/design-system/demo/decision-lab"; import { TracePlayer } from "@/design-system/demo/trace-player"; import { useDemoRun } from "@/design-system/demo/use-demo-run"; import { runExperience, type ExperienceInput } from "@/lib/experience/adapter"; import { copy as en } from "@/lib/experience/copy.en"; import { copy as es } from "@/lib/experience/copy.es"; import { supplierScenarios } from "@/lib/experience/story"; import { Visualization } from "./visualization";
-export function Experience({ lang }: { lang: "en" | "es" }) { const spanish = lang === "es"; const c = spanish ? es : en; const [input,setInput] = useState<ExperienceInput>(supplierScenarios.resolved); const [selected,setSelected] = useState<"resolved"|"investigate"|"custom">("resolved"); const demo = useDemoRun(runExperience); useEffect(()=>{demo.cancel();},[input.highImpactUnresolved,input.relevance]); const change=(next:ExperienceInput)=>{setInput(next);setSelected("custom");demo.reset();}; const reset=()=>{setInput(supplierScenarios.resolved);setSelected("resolved");demo.reset();}; return <main className="mx-auto max-w-6xl px-5 py-12"><div className="flex justify-between"><a href={`/${lang}`}>← {spanish?"Portafolio":"Portfolio"}</a><a className="rounded border px-3 py-1" href={`/${spanish?"en":"es"}/app`}>{spanish?"EN":"ES"}</a></div><p className="mt-2 text-xs text-muted-foreground">{spanish?"Cambiar idioma reinicia el escenario.":"Changing language resets the scenario."}</p><h1 className="mt-8 text-4xl font-bold">{c.title}</h1><BusinessBrief lang={lang}/><p className="mt-3 text-muted-foreground">{c.briefing}</p><div className="mt-10 grid gap-6 lg:grid-cols-[300px_1fr]"><section className="rounded-2xl border p-5"><ScenarioPicker locale={lang} selected={selected} onSelect={(id)=>{setInput(supplierScenarios[id as "resolved"|"investigate"]);setSelected(id as "resolved"|"investigate");demo.reset();}} options={[{id:"resolved",label:spanish?"Evidencia resuelta":"Resolved evidence",description:spanish?"Se conserva el monitoreo.":"Monitoring can continue."},{id:"investigate",label:spanish?"Señal crítica":"Critical signal",description:spanish?"Se abre una investigación.":"An investigation opens."}]}/><label className="flex justify-between">{spanish?"Señal sin resolver":"Unresolved signal"}<input type="checkbox" checked={input.highImpactUnresolved} onChange={e=>change({...input,highImpactUnresolved:e.target.checked})}/></label><label className="mt-4 block">{spanish?"Relevancia":"Relevance"}: {input.relevance}<input className="mt-2 w-full" min="0" max="100" type="range" value={input.relevance} onChange={e=>change({...input,relevance:Number(e.target.value)})}/></label>{demo.error&&<p className="mt-3 text-danger" role="alert">{spanish?"La relevancia debe estar entre 0 y 100.":demo.error}</p>}<button className="mt-6 w-full rounded bg-accent py-2 text-white" onClick={()=>demo.execute(input)}>{demo.running?(spanish?"Evaluando":"Assessing"):c.run}</button><div className="mt-3 flex gap-2"><button className="rounded border px-3 py-1" onClick={demo.cancel}>{spanish?"Cancelar":"Cancel"}</button><button className="rounded border px-3 py-1" onClick={reset}>{spanish?"Restaurar":"Reset"}</button></div></section><TracePlayer trace={demo.trace} locale={lang} executionMs={demo.run?.executionMs} translate={key=>key==="signals"?(spanish?"Señales analizadas":"Signals analysed"):(spanish?"Recomendación decidida":"Recommendation decided")} renderStage={frame=>{const result=frame.complete?(demo.run?.result??null):null;return <StoryStage locale={lang} title={spanish?"Mapa de investigación":"Investigation map"} caption={spanish?"La señal y sus tareas aparecen antes de revelar la recomendación.":"The signal and its tasks appear before the recommendation is revealed."} step={frame.visible} total={frame.total}><Visualization input={input} visible={frame.visible} result={result} lang={lang}/>{result&&<div className="mt-5"><OutcomeBlock title={result.recommendation==="investigate"?(spanish?"Investigar":"Investigate"):(spanish?"Continuar":"Proceed")} explanation={spanish?(result.recommendation==="investigate"?"La señal de alto impacto conserva tareas abiertas para la persona analista.":"La evidencia está resuelta; el monitoreo puede continuar."):(result.recommendation==="investigate"?"The high-impact signal keeps analyst tasks open.":"Evidence is resolved; monitoring can continue.")} tone={result.recommendation==="investigate"?"warning":"success"}/></div>}</StoryStage>;}}/></div></main>; }
+import { useState } from "react";
+import { TracePlayer } from "@/design-system/demo/trace-player";
+import { MissionPrompt, MissionComparison } from "@/design-system/demo/mission-lab";
+import { useDemoRun } from "@/design-system/demo/use-demo-run";
+import { StoryHero, StorySection, AnalogyBlock, WhyIBuiltIt, FitGuide, ProvesBlock, EngineerNotes } from "@/design-system/demo/project-story";
+import { LanguageSwitch } from "@/design-system/components/language-switch";
+import { traceCopy } from "@/lib/experience/trace-copy";
+import { runMission } from "@/lib/experience/mission";
+import { RadarStoryScene } from "@/lib/experience/story-scene";
+import { COMPLETE_FRAME } from "@/lib/experience/scene-state";
+import { STORY } from "@/lib/experience/story";
+
+const REPO = "https://github.com/mdeasis27/radar-proveedores";
+const DEFAULT_CUTOFF = 50;
+
+export function Experience({ lang: locale }: { lang: "en" | "es" }) {
+  const t = STORY[locale];
+  const [cutoff, setCutoff] = useState(DEFAULT_CUTOFF);
+  const [prediction, setPrediction] = useState<string | null>(null);
+  const demo = useDemoRun(runMission);
+  const run = demo.run;
+  const result = run?.result;
+  // Section 03 waits for the tape to finish; keyed to the trace so every new run resets it.
+  const [playedTrace, setPlayedTrace] = useState<typeof demo.trace | null>(null);
+  const played = demo.trace.length === 0 || playedTrace === demo.trace;
+  const clear = () => { setPrediction(null); demo.reset(); };
+  const reset = () => { setCutoff(DEFAULT_CUTOFF); clear(); };
+  const scene = (frame: typeof COMPLETE_FRAME) => result ? <RadarStoryScene frame={frame} result={result} locale={locale} /> : null;
+
+  return <main className="mx-auto max-w-5xl px-5 py-8 text-foreground sm:py-12">
+    <div className="mb-6 flex items-center justify-between gap-4">
+      <a className="font-mono text-xs text-muted-foreground underline-offset-4 hover:underline" href={`/${locale}`}>← {t.name}</a>
+      <LanguageSwitch locale={locale} />
+    </div>
+    <StoryHero name={t.name} oneLiner={t.oneLiner} chips={t.chips} />
+
+    <StorySection index={1} heading={t.analogy.heading}>
+      <AnalogyBlock paragraphs={t.analogy.paragraphs} dictionaryLabel={t.analogy.dictionaryLabel} dictionary={t.analogy.dictionary} />
+    </StorySection>
+
+    <WhyIBuiltIt title={t.why.title} text={t.why.text} />
+
+    <StorySection index={2} heading={t.tryIt.heading} lead={t.tryIt.lead}>
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)]">
+        <section className="min-w-0 rounded-xl border border-border bg-surface p-5">
+          <MissionPrompt locale={locale} question={t.tryIt.question(cutoff)} prediction={prediction} onPredict={setPrediction} locked={Boolean(run) || demo.running} options={[{ id: "yes", label: t.tryIt.yes }, { id: "no", label: t.tryIt.no }]} />
+          <label className="mt-5 block text-sm">
+            <span className="flex justify-between"><span>{t.tryIt.cutoffLabel}</span><span className="font-mono">{cutoff}</span></span>
+            <input aria-label={t.tryIt.cutoffLabel} className="mt-2 w-full" type="range" min="0" max="100" step="10" value={cutoff} onChange={e => { setCutoff(Number(e.target.value)); clear(); }} />
+            <span className="mt-1 block text-xs text-muted-foreground">{t.tryIt.cutoffHint}</span>
+          </label>
+          <p className="mt-4 text-xs leading-5 text-muted-foreground">{t.tryIt.note}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <button type="button" data-run-experiment disabled={demo.running} className="min-w-0 flex-1 rounded-lg bg-accent px-4 py-3 text-sm font-medium text-white disabled:opacity-60" onClick={() => demo.execute({ cutoff })}>{t.tryIt.simulate}</button>
+            <button type="button" className="rounded-lg border border-border px-3 py-3 text-sm" onClick={demo.cancel}>{t.tryIt.cancel}</button>
+            <button type="button" className="rounded-lg border border-border px-3 py-3 text-sm" onClick={reset}>{t.tryIt.reset}</button>
+          </div>
+          {demo.error ? <p role="alert" className="mt-3 text-sm text-danger">{t.tryIt.error}</p> : null}
+        </section>
+        <section className="min-w-0">
+          {run && result
+            ? (demo.trace.length === 0 ? scene(COMPLETE_FRAME) : <TracePlayer collapsible autoPlay headingLevel="h3" onComplete={() => setPlayedTrace(demo.trace)} translate={key => traceCopy(locale, key)} trace={demo.trace} locale={locale} executionMs={run.executionMs} renderStage={scene} />)
+            : <p className="rounded-xl border border-dashed border-border p-8 text-sm text-muted-foreground">{t.tryIt.idle}</p>}
+        </section>
+      </div>
+    </StorySection>
+
+    <StorySection index={3} heading={t.compare.heading} lead={t.compare.lead}>
+      {result && played ? <MissionComparison locale={locale} prediction={prediction} actual={result.missed > 0 ? "yes" : "no"} actualLabel={t.scene.missedOf(result.missed)} explanation={t.compare.sentence(result.comparison.mine, result.comparison.all)} sides={[
+        { label: t.compare.mine, value: `${result.comparison.mine.missed}`, detail: `${t.compare.missed} · ${t.compare.read(result.comparison.mine.read)}` },
+        { label: t.compare.all, value: `${result.comparison.all.missed}`, detail: `${t.compare.missed} · ${t.compare.read(result.comparison.all.read)}`, positive: result.comparison.all.missed < result.comparison.mine.missed },
+      ]} /> : null}
+    </StorySection>
+
+    <StorySection index={4} heading={t.fit.heading}>
+      <FitGuide worthLabel={t.fit.worthLabel} worth={t.fit.worth} notLabel={t.fit.notLabel} not={t.fit.not} />
+    </StorySection>
+
+    <StorySection index={5} heading={t.proves.heading}>
+      <ProvesBlock text={t.proves.text} />
+    </StorySection>
+
+    <EngineerNotes summary={t.engineers.summary}>
+      <ul className="list-disc space-y-2 pl-5">{t.engineers.points.map(p => <li key={p}>{p}</li>)}</ul>
+      <a className="mt-4 inline-block text-accent underline underline-offset-4" href={REPO}>{t.engineers.repoLabel} →</a>
+    </EngineerNotes>
+  </main>;
+}
