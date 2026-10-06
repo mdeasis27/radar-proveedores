@@ -26,7 +26,7 @@ export const STORY: Record<"en" | "es", RadarStory> = {
       heading: { before: "The", accent: "analogy" },
       paragraphs: [
         "Before you hire someone, you call their references. If you only call the first two on the list, the one that mattered might have been the third.",
-        "The supplier radar gathers what is said about a supplier, from news to public records, and ranks it by relevance. The analyst decides how far down the list to read.",
+        "Supplier due diligence gathers what is said about a supplier, from news to public records, and ranks it by relevance. The analyst decides how far down the list to read.",
       ],
       dictionaryLabel: "In the diagram below",
       dictionary: [
@@ -41,7 +41,7 @@ export const STORY: Record<"en" | "es", RadarStory> = {
       heading: { before: "Try", accent: "it" },
       lead: "Ten signals about one supplier, ranked from 10 to 100 in relevance. Two of them are serious.",
       question: (c) => `Before you run it, place a bet: if the analyst reads from relevance ${c} up, does a serious signal go unread?`,
-      yes: "Yes, one slips by",
+      yes: "Yes, at least one slips by",
       no: "No, both are found",
       cutoffLabel: "Analyst reads from relevance",
       cutoffHint: "Higher means fewer signals to read.",
@@ -62,7 +62,7 @@ export const STORY: Record<"en" | "es", RadarStory> = {
       sentence: (mine, all) => {
         if (mine.read === all.read) return "With your cutoff the analyst already reads everything, so both results are the same.";
         if (mine.missed === 0) return `With your cutoff the analyst read ${mine.read} of 10 signals and still found both serious ones.`;
-        return `Reading ${mine.read} signals, the analyst missed ${mine.missed === 1 ? "a serious one" : `${mine.missed} serious ones`}. Reading all ${all.read}, nothing slipped by.`;
+        return `Reading ${mine.read} ${mine.read === 1 ? "signal" : "signals"}, the analyst missed ${mine.missed === 1 ? "a serious one" : `${mine.missed} serious ones`}. Reading all ${all.read}, nothing slipped by.`;
       },
     },
     fit: {
@@ -124,7 +124,7 @@ export const STORY: Record<"en" | "es", RadarStory> = {
       heading: { accent: "Pruébalo" },
       lead: "Diez señales sobre un proveedor, ordenadas de 10 a 100 en relevancia. Dos de ellas son graves.",
       question: (c) => `Antes de correrlo, apuesta: si el analista lee desde relevancia ${c} hacia arriba, ¿se queda sin leer alguna señal grave?`,
-      yes: "Sí, se le pasa una",
+      yes: "Sí, se le pasa al menos una",
       no: "No, encuentra las dos",
       cutoffLabel: "El analista lee desde relevancia",
       cutoffHint: "Más alto significa menos señales que leer.",
@@ -145,7 +145,7 @@ export const STORY: Record<"en" | "es", RadarStory> = {
       sentence: (mine, all) => {
         if (mine.read === all.read) return "Con tu corte el analista ya lee todo, así que los dos resultados son iguales.";
         if (mine.missed === 0) return `Con tu corte el analista leyó ${mine.read} de 10 señales y aun así encontró las dos graves.`;
-        return `Leyendo ${mine.read} señales, al analista se le ${mine.missed === 1 ? "pasó una grave" : `pasaron ${mine.missed} graves`}. Leyendo las ${all.read}, no se le pasó ninguna.`;
+        return `Leyendo ${mine.read} ${mine.read === 1 ? "señal" : "señales"}, al analista se le ${mine.missed === 1 ? "pasó una grave" : `pasaron ${mine.missed} graves`}. Leyendo las ${all.read}, no se le pasó ninguna.`;
       },
     },
     fit: {

@@ -32,6 +32,8 @@ test("the comparison sentence is true for a miss, a clean cut and reading everyt
   assert.equal(STORY.es.compare.sentence({ read: 6, missed: 1 }, { read: 10, missed: 0 }), "Leyendo 6 señales, al analista se le pasó una grave. Leyendo las 10, no se le pasó ninguna.");
   assert.match(STORY.es.compare.sentence({ read: 7, missed: 0 }, { read: 10, missed: 0 }), /aun así encontró/);
   assert.match(STORY.en.compare.sentence({ read: 10, missed: 0 }, { read: 10, missed: 0 }), /already reads everything/);
+  assert.equal(STORY.en.compare.sentence({ read: 1, missed: 2 }, { read: 10, missed: 0 }), "Reading 1 signal, the analyst missed 2 serious ones. Reading all 10, nothing slipped by.");
+  assert.equal(STORY.es.compare.sentence({ read: 1, missed: 2 }, { read: 10, missed: 0 }), "Leyendo 1 señal, al analista se le pasaron 2 graves. Leyendo las 10, no se le pasó ninguna.");
 });
 
 test("missed count agrees in number", () => {
