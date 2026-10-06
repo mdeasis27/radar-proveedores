@@ -1,6 +1,5 @@
 import type { Heading } from "@/design-system/demo/project-story";
 
-type NodeCopy = { name: string; sub: string; analogy: string };
 type Tally = { read: number; missed: number };
 
 export interface RadarStory {
@@ -14,7 +13,7 @@ export interface RadarStory {
   fit: { heading: Heading; worthLabel: string; worth: string; notLabel: string; not: string };
   proves: { heading: Heading; text: string };
   engineers: { summary: string; points: string[]; repoLabel: string };
-  scene: { title: string; caption: string; statusLabels: { active: string; success: string; danger: string }; tapeLabel: string; nodes: { signals: NodeCopy; ranking: NodeCopy; analyst: NodeCopy; decision: NodeCopy }; tape: { served: string; rerouted: string; lost: string }; missedOf: (n: number) => string };
+  scene: { title: string; caption: string; order: string; callsFrom: (cutoff: number) => string; notCalled: string; bubble: string; legend: { ok: string; found: string; lost: string }; called: (n: number) => string; uncalled: (n: number) => string; describe: (cutoff: number, read: number, missed: number) => string; tapeLabel: string; tape: { served: string; rerouted: string; lost: string }; missedOf: (n: number) => string };
 }
 
 export const STORY: Record<"en" | "es", RadarStory> = {
@@ -87,16 +86,17 @@ export const STORY: Record<"en" | "es", RadarStory> = {
       repoLabel: "Source code",
     },
     scene: {
-      title: "What the analyst read",
-      caption: "Watch the signals come in two at a time, from least to most relevant.",
-      statusLabels: { active: "tuned by you", success: "no serious signal missed", danger: "a serious signal went unread" },
+      title: "Calling the references",
+      caption: "The phone calls only the references at or above the cut. Each answer colors the card: green when all is well, blue when they warn you. A red card with a cross is a bad reference you never called.",
+      order: "from least to most relevant",
+      callsFrom: (c) => `You call from relevance ${c} up`,
+      notCalled: "not called",
+      bubble: "“We had problems”",
+      legend: { ok: "good reference", found: "bad reference you heard", lost: "bad reference you never called" },
+      called: (n) => `You called ${n} of 10`,
+      uncalled: (n) => (n === 0 ? "No bad reference was left uncalled" : n === 1 ? "1 bad reference was never called" : `${n} bad references were never called`),
+      describe: (c, read, missed) => `Ten references ranked from least to most relevant. You call from relevance ${c} up and make ${read} ${read === 1 ? "call" : "calls"}. ${missed === 0 ? "No bad reference was left uncalled." : missed === 1 ? "1 bad reference was never called." : `${missed} bad references were never called.`}`,
       tapeLabel: "Ten signals, from least to most relevant",
-      nodes: {
-        signals: { name: "Signals", sub: "news and records", analogy: "the references" },
-        ranking: { name: "Ranking", sub: "by relevance", analogy: "the list" },
-        analyst: { name: "Analyst", sub: "reads from a cutoff", analogy: "the calls you make" },
-        decision: { name: "Decision", sub: "sign or investigate", analogy: "hiring" },
-      },
       tape: { served: "no problem", rerouted: "serious, found", lost: "serious, never read" },
       missedOf: (n) => (n === 0 ? "No serious signal went unread" : n === 1 ? "1 serious signal went unread" : `${n} serious signals went unread`),
     },
@@ -170,16 +170,17 @@ export const STORY: Record<"en" | "es", RadarStory> = {
       repoLabel: "Código fuente",
     },
     scene: {
-      title: "Qué leyó el analista",
-      caption: "Mira cómo llegan las señales de dos en dos, de la menos a la más relevante.",
-      statusLabels: { active: "ajustado por ti", success: "no se pasó ninguna señal grave", danger: "una señal grave quedó sin leer" },
+      title: "Las llamadas a las referencias",
+      caption: "El teléfono llama solo a las referencias desde el corte hacia arriba. Cada respuesta pinta la tarjeta: verde si todo bien, azul si te advierten de un problema. Una tarjeta roja con una cruz es una mala referencia que nunca llamaste.",
+      order: "de la menos relevante a la más relevante",
+      callsFrom: (c) => `Llamas desde la relevancia ${c}`,
+      notCalled: "no llamas",
+      bubble: "“Tuvimos problemas”",
+      legend: { ok: "buena referencia", found: "mala referencia que escuchaste", lost: "mala referencia que nunca llamaste" },
+      called: (n) => `Llamaste a ${n} de 10`,
+      uncalled: (n) => (n === 0 ? "No quedó sin llamar ninguna mala referencia" : n === 1 ? "Quedó sin llamar 1 mala referencia" : `Quedaron sin llamar ${n} malas referencias`),
+      describe: (c, read, missed) => `Diez referencias ordenadas de la menos a la más relevante. Llamas desde la relevancia ${c} y haces ${read} ${read === 1 ? "llamada" : "llamadas"}. ${missed === 0 ? "No quedó sin llamar ninguna mala referencia." : missed === 1 ? "Quedó sin llamar 1 mala referencia." : `Quedaron sin llamar ${missed} malas referencias.`}`,
       tapeLabel: "Diez señales, de la menos a la más relevante",
-      nodes: {
-        signals: { name: "Señales", sub: "noticias y registros", analogy: "las referencias" },
-        ranking: { name: "Orden", sub: "por relevancia", analogy: "la lista" },
-        analyst: { name: "Analista", sub: "lee desde un corte", analogy: "las llamadas que haces" },
-        decision: { name: "Decisión", sub: "firmar o investigar", analogy: "contratar" },
-      },
       tape: { served: "sin problema", rerouted: "grave, encontrada", lost: "grave, nunca leída" },
       missedOf: (n) => (n === 0 ? "No quedó sin leer ninguna señal grave" : n === 1 ? "Quedó sin leer 1 señal grave" : `Quedaron sin leer ${n} señales graves`),
     },

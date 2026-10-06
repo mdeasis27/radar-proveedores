@@ -40,3 +40,11 @@ test("missed count agrees in number", () => {
   assert.equal(STORY.es.scene.missedOf(1), "Quedó sin leer 1 señal grave");
   assert.equal(STORY.en.scene.missedOf(2), "2 serious signals went unread");
 });
+
+test("scene result lines agree in number", () => {
+  assert.equal(STORY.es.scene.called(6), "Llamaste a 6 de 10");
+  assert.equal(STORY.es.scene.uncalled(1), "Quedó sin llamar 1 mala referencia");
+  assert.equal(STORY.en.scene.uncalled(2), "2 bad references were never called");
+  assert.match(STORY.en.scene.describe(50, 6, 1), /relevance 50 up and make 6 calls\. 1 bad reference was never called\.$/);
+  assert.match(STORY.es.scene.describe(100, 1, 1), /haces 1 llamada\./);
+});
